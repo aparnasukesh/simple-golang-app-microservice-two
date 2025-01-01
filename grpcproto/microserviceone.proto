@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package microservice_one;
+
+option go_package = "./grpcproto";
+
+service MicroServiceTwoService {
+    rpc MethodOne(MethodRequest) returns (MethodResponse);
+    rpc MethodTwo(MethodRequest) returns (MethodResponse);
+}
+
+message Name{
+    string name = 1;
+}
+
+message MethodRequest {
+    int32 method_number = 1;
+    int32 wait_time = 2;
+    repeated Name names = 3;
+}
+
+message MethodResponse {
+    repeated Name user_names = 1;
+}
+
