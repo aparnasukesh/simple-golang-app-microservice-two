@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: microservice-one
+  name: microservice-two
   namespace: machine-task  # Added namespace
   labels:
-    app: microservice-one
+    app: microservice-two
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: microservice-one
+      app: microservice-two
   template:
     metadata:
       labels:
-        app: microservice-one
+        app: microservice-two
     spec:
       containers:
-        - name: microservice-one
-          image: aparnasukesh/microservice-one:latest
+        - name: microservice-two
+          image: aparnasukesh/microservice-two:latest
           ports:
             - containerPort: 5055
           resources:
@@ -31,14 +31,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: microservice-one
+  name: microservice-two
   namespace: machine-task  # Added namespace
   labels:
-    app: microservice-one
+    app: microservice-two
 spec:
   type: ClusterIP
   ports:
     - port: 5055
       targetPort: 5055
   selector:
-    app: microservice-one
+    app: microservice-two
