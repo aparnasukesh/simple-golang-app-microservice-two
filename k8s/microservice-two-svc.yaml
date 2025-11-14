@@ -1,22 +1,66 @@
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: microservice-two
+#   labels:
+#     app: microservice-two
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: microservice-two
+#   template:
+#     metadata:
+#       labels:
+#         app: microservice-two
+#     spec:
+#       containers:
+#         - name: microservice-two
+#           image: aparnasukesh/microservice-two-svc:latest
+#           ports:
+#             - containerPort: 5055
+#           resources:
+#             requests:
+#               memory: "128Mi"
+#               cpu: "250m"
+#             limits:
+#               memory: "128Mi"
+#               cpu: "250m"
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: microservice-two
+#   labels:
+#     app: microservice-two
+# spec:
+#   type: ClusterIP
+#   ports:
+#     - port: 5055
+#       targetPort: 5055
+#   selector:
+#     app: microservice-two
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: microservice2
+  name: microservice-two
   labels:
-    app: microservice2
+    app: microservice-two
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: microservice2
+      app: microservice-two
   template:
     metadata:
       labels:
-        app: microservice2
+        app: microservice-two
     spec:
       containers:
-        - name: microservice2
-          image: aparnasukesh/microservice-two-svc:latest
+        - name: microservice-two
+          image: service-two:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5055
           resources:
@@ -24,19 +68,30 @@ spec:
               memory: "128Mi"
               cpu: "250m"
             limits:
-              memory: "128Mi"
-              cpu: "250m"
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            tcpSocket:
+              port: 5055
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 5055
+            initialDelaySeconds: 5
+            periodSeconds: 5
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: microservice2
+  name: microservice-two
   labels:
-    app: microservice2
+    app: microservice-two
 spec:
-  type: ClusterIP
+  type: NodePort
   ports:
     - port: 5055
       targetPort: 5055
+      nodePort: 30003
   selector:
-    app: microservice2
+    app: microservice-two
